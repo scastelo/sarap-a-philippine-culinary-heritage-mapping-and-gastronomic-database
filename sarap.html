@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sarap! — Philippine Culinary Heritage Mapping & Gastronomic Database</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,700;1,8..60,300;1,8..60,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   SARAP! — Design System
+   Inspired by Exploding Galaxies' Sarap & Palayok
+   Aesthetic: editorial literary / warm archival / flat folk illustration
+   ═══════════════════════════════════════ */
+
+:root {
+  /* Paper palette — warm cream ground */
+  --paper:       #F5F0E8;
+  --paper-dark:  #EDE6D6;
+  --paper-deep:  #E0D5C0;
+  --ink:         #1A1208;
+  --ink-mid:     #4A3A1E;
+  --ink-soft:    #8A7558;
+  --ink-ghost:   #B8A882;
+
+  /* Accent palette — terracotta / clay / ochre */
+  --terracotta:  #B85030;
+  --terracotta2: #D4682A;
+  --clay:        #C87848;
+  --ochre:       #C8901A;
+  --ochre-light: #F0C868;
+  --forest:      #2A5028;
+  --forest-mid:  #3A6A38;
+  --teal:        #1E6868;
+  --indigo:      #3A3878;
+  --rust:        #882818;
+
+  /* Region palette */
+  --r-ilocos:    #8BA8C8;
+  --r-tagalog:   #78A878;
+  --r-bicol:     #C87850;
+  --r-visayas:   #C8A028;
+  --r-mindanao:  #58A050;
+  --r-pampanga:  #B85880;
+  --r-batangas:  #7058B8;
+  --r-maranao:   #887840;
+
+  --radius:   6px;
+  --radius-lg: 12px;
+  --border:   1px solid rgba(26,18,8,0.14);
+  --shadow:   0 2px 12px rgba(26,18,8,0.10);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Source Serif 4', 'Georgia', serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+/* ── TYPOGRAPHY ── */
+h1, h2, h3, h4 { font-family: 'Libre Baskerville', 'Georgia', serif; }
+.mono { font-family: 'DM Mono', 'Courier New', monospace; }
+.serif-italic { font-style: italic; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--paper-dark); }
+::-webkit-scrollbar-thumb { background: var(--ink-ghost); border-radius: 3px; }
+
+/* ══════════════════════════════════════
+   LAYOUT SHELL
+   ══════════════════════════════════════ */
+
+.app-shell {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── MASTHEAD ── */
+.masthead {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 58px;
+  border-bottom: 3px solid var(--terracotta);
+  flex-shrink: 0;
+  position: relative;
+}
+.masthead::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0; right: 0;
+  height: 2px;
+  background: var(--ochre);
+}
+
+.masthead-left { display: flex; align-items: baseline; gap: 14px; }
+
+.wordmark {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+  line-height: 1;
+}
+.wordmark em {
+  color: var(--ochre-light);
+  font-style: italic;
+}
+.wordmark-exclaim {
+  color: var(--terracotta2);
+}
+
+.masthead-sub {
+  font-family: 'Source Serif 4', serif;
+  font-size: 11px;
+  font-style: italic;
+  color: var(--ink-ghost);
+  letter-spacing: 0.03em;
+  padding-left: 14px;
+  border-left: 1px solid rgba(255,255,255,0.2);
+}
+
+.masthead-nav {
+  display: flex;
+  gap: 0;
+}
+.nav-item {
+  padding: 0 14px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.6);
+  cursor: pointer;
+  transition: all 0.15s;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+  position: relative;
+  z-index: 1;
+}
+.nav-item:hover { color: var(--paper); }
+.nav-item.active {
+  color: var(--ochre-light);
+  border-bottom-color: var(--ochre-light);
+}
+
+.masthead-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: rgba(245,240,232,0.4);
+}
+.pulse { width: 6px; height: 6px; border-radius: 50%; background: #5DCAA5; animation: blink 2.2s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+/* ── BODY GRID ── */
+.body-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  overflow: hidden;
+  height: 100%;
+}
+
+/* ══════════════════════════════════════
+   LEFT SIDEBAR — DISH BROWSER
+   ══════════════════════════════════════ */
+
+.sidebar {
+  background: var(--paper-dark);
+  border-right: var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sb-header {
+  padding: 18px 18px 14px;
+  border-bottom: var(--border);
+  background: var(--paper-deep);
+}
+
+.sb-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--paper);
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  transition: border-color 0.15s;
+}
+.search-field:focus-within { border-color: var(--terracotta); }
+.search-field input {
+  border: none;
+  background: transparent;
+  font-family: 'Source Serif 4', serif;
+  font-size: 13px;
+  color: var(--ink);
+  outline: none;
+  width: 100%;
+}
+.search-field input::placeholder { color: var(--ink-ghost); font-style: italic; }
+.search-ico { color: var(--ink-soft); flex-shrink: 0; }
+
+/* Region filter chips */
+.region-strip {
+  padding: 10px 18px;
+  border-bottom: var(--border);
+  background: var(--paper-dark);
+}
+.region-strip-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-ghost);
+  margin-bottom: 8px;
+}
+.chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.chip {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  background: var(--paper);
+  color: var(--ink-soft);
+  transition: all 0.14s;
+  letter-spacing: 0.03em;
+}
+.chip:hover { color: var(--ink); }
+.chip.on { color: #fff; }
+
+/* Dish list */
+.dish-scroll { overflow-y: auto; flex: 1; }
+.dish-entry {
+  padding: 13px 18px;
+  border-bottom: var(--border);
+  cursor: pointer;
+  transition: background 0.12s;
+  position: relative;
+}
+.dish-entry:hover { background: rgba(200,120,72,0.07); }
+.dish-entry.active {
+  background: var(--paper);
+  border-left: 3px solid var(--terracotta);
+  padding-left: 15px;
+}
+.de-name {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 3px;
+  letter-spacing: -0.01em;
+}
+.de-region {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+.rdot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.de-flavors { display: flex; flex-wrap: wrap; gap: 3px; }
+.f-micro {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.03em;
+  padding: 1px 7px;
+  border-radius: 20px;
+  font-weight: 400;
+}
+
+/* sidebar count */
+.sb-count {
+  padding: 8px 18px;
+  border-top: var(--border);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-ghost);
+  background: var(--paper-deep);
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════
+   MAIN PANEL
+   ══════════════════════════════════════ */
+
+.main-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  border-bottom: var(--border);
+  background: var(--paper-dark);
+  flex-shrink: 0;
+  padding: 0 28px;
+}
+.tab {
+  padding: 11px 16px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.14s;
+  white-space: nowrap;
+}
+.tab:hover { color: var(--ink); }
+.tab.active {
+  color: var(--terracotta);
+  border-bottom-color: var(--terracotta);
+}
+
+.panel-area { flex: 1; overflow-y: auto; }
+
+/* ──────────────────────────────────────
+   PANEL: DETAIL
+   ────────────────────────────────────── */
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* Hero block */
+.dish-hero {
+  padding: 32px 36px 24px;
+  border-bottom: var(--border);
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: 32px;
+  align-items: start;
+  background: var(--paper);
+}
+
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.region-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px 3px 8px;
+  border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+}
+.era-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-ghost);
+  letter-spacing: 0.04em;
+}
+
+.dish-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+
+.dish-tagline {
+  font-family: 'Source Serif 4', serif;
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink-mid);
+  margin-bottom: 16px;
+}
+
+.flavor-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.f-chip {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+}
+
+/* Illustration placeholder — folk art motif in SVG */
+.dish-art {
+  aspect-ratio: 1;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--paper-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--border);
+}
+
+/* Hero data row */
+.hero-meta-row {
+  display: flex;
+  gap: 0;
+  border-top: var(--border);
+  margin: 0 36px;
+  border-bottom: var(--border);
+}
+.hm-cell {
+  flex: 1;
+  padding: 14px 0;
+  border-right: var(--border);
+}
+.hm-cell:last-child { border-right: none; }
+.hm-cell + .hm-cell { padding-left: 18px; }
+.hm-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-ghost);
+  margin-bottom: 5px;
+}
+.hm-val {
+  font-family: 'Source Serif 4', serif;
+  font-size: 13px;
+  color: var(--ink-mid);
+  line-height: 1.4;
+}
+
+/* Detail body */
+.detail-body { padding: 28px 36px; }
+
+.section { margin-bottom: 28px; }
+.sec-head {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--terracotta);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--paper-deep);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sec-head::before {
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--terracotta);
+  flex-shrink: 0;
+}
+
+.origin-pull {
+  font-family: 'Source Serif 4', serif;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink-mid);
+  padding: 18px 22px;
+  background: var(--paper-dark);
+  border-left: 3px solid var(--terracotta);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.ingredients-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.ing-tag {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 12px;
+  font-style: italic;
+  background: var(--paper-dark);
+  color: var(--ink-mid);
+  border: var(--border);
+}
+
+/* Season bar */
+.season-visual {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 6px;
+}
+.s-bar {
+  flex: 1;
+  height: 10px;
+  border-radius: 5px;
+  transition: opacity 0.2s;
+}
+.s-labels {
+  display: flex;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--ink-ghost);
+}
+.s-lbl { flex: 1; text-align: center; }
+
+/* Community list */
+.community-rows {}
+.comm-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--paper-deep);
+  font-family: 'Source Serif 4', serif;
+  font-size: 14px;
+  color: var(--ink-mid);
+}
+.comm-row:last-child { border-bottom: none; }
+.comm-bullet { width: 5px; height: 5px; border-radius: 50%; background: var(--terracotta2); flex-shrink: 0; }
+
+/* ──────────────────────────────────────
+   PANEL: FLAVOR MATCHING
+   ────────────────────────────────────── */
+
+.match-panel-inner { padding: 32px 36px; }
+
+.match-header {
+  margin-bottom: 24px;
+}
+.match-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+.match-desc {
+  font-family: 'Source Serif 4', serif;
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink-mid);
+  line-height: 1.7;
+  max-width: 680px;
+}
+
+/* Stats strip */
+.stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.stat-tile {
+  background: var(--paper-dark);
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+.stat-n {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--terracotta);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-l {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+}
+
+/* Match cards grid */
+.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.match-card {
+  background: var(--paper-dark);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.match-card:hover {
+  border-color: var(--terracotta2);
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.match-score-col { text-align: center; flex-shrink: 0; width: 52px; }
+.match-score {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--terracotta);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.match-score-pct {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--ink-ghost);
+  letter-spacing: 0.06em;
+}
+.match-divider {
+  width: 1px;
+  background: var(--paper-deep);
+  align-self: stretch;
+  flex-shrink: 0;
+}
+.match-info { flex: 1; }
+.match-dish-name {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 3px;
+}
+.match-region-row {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+.match-shared-pills { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 6px; }
+.shared-pill {
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  background: rgba(184,80,48,0.1);
+  color: var(--terracotta);
+  letter-spacing: 0.03em;
+}
+.match-note {
+  font-family: 'Source Serif 4', serif;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+/* ──────────────────────────────────────
+   PANEL: ITINERARY BUILDER
+   ────────────────────────────────────── */
+
+.itin-panel-inner { padding: 28px 36px; }
+
+.itin-control-bar {
+  background: var(--paper-dark);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 28px;
+}
+.ctrl-group { display: flex; flex-direction: column; gap: 5px; }
+.ctrl-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-ghost);
+}
+.ctrl-select {
+  padding: 8px 12px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 13px;
+  border: var(--border);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+  outline: none;
+  cursor: pointer;
+  min-width: 160px;
+}
+.ctrl-select:focus { border-color: var(--terracotta); }
+.gen-btn {
+  padding: 9px 22px;
+  background: var(--terracotta);
+  color: var(--paper);
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Libre Baskerville', serif;
+  font-size: 14px;
+  font-style: italic;
+  cursor: pointer;
+  transition: background 0.15s;
+  align-self: flex-end;
+  letter-spacing: 0.01em;
+}
+.gen-btn:hover { background: var(--rust); }
+
+/* Itinerary route display */
+.route-banner {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--radius-lg);
+  padding: 16px 22px;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.route-name {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 18px;
+  font-style: italic;
+  letter-spacing: -0.01em;
+}
+.route-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-ghost);
+  letter-spacing: 0.06em;
+  margin-top: 3px;
+}
+.route-flavor-tag {
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  background: rgba(245,240,232,0.12);
+  color: var(--ochre-light);
+  letter-spacing: 0.04em;
+}
+
+.day-cards { display: flex; flex-direction: column; gap: 14px; }
+.day-card {
+  background: var(--paper-dark);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.day-card-head {
+  padding: 12px 18px;
+  background: var(--paper-deep);
+  border-bottom: var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.day-num {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--terracotta);
+  color: var(--paper);
+  font-family: 'Libre Baskerville', serif;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.day-card-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.day-card-loc {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.day-card-flavors { margin-left: auto; display: flex; gap: 3px; }
+
+.stop-list { padding: 0 18px; }
+.stop-row {
+  display: flex;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(26,18,8,0.07);
+}
+.stop-row:last-child { border-bottom: none; }
+.stop-time {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-ghost);
+  width: 68px;
+  flex-shrink: 0;
+  padding-top: 2px;
+  letter-spacing: 0.02em;
+}
+.stop-body {}
+.stop-title {
+  font-family: 'Source Serif 4', serif;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.stop-sub {
+  font-family: 'Source Serif 4', serif;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+/* ──────────────────────────────────────
+   PANEL: REGIONAL MAP
+   ────────────────────────────────────── */
+
+.map-panel-inner { padding: 28px 36px; }
+
+.map-intro {
+  margin-bottom: 24px;
+}
+.map-intro h2 {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 5px;
+}
+.map-intro p {
+  font-family: 'Source Serif 4', serif;
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink-mid);
+}
+
+.region-mosaic {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.r-tile {
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.14s;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+.r-tile:hover { filter: brightness(0.95); }
+.r-tile.sel { border-color: var(--ink); }
+.r-tile-name {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.r-tile-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+.r-tile-flavors { display: flex; flex-wrap: wrap; gap: 3px; }
+.r-tile-f {
+  padding: 1px 7px;
+  border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  background: rgba(255,255,255,0.45);
+  letter-spacing: 0.03em;
+}
+
+.map-dish-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.map-dish-card {
+  background: var(--paper-dark);
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.14s;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.map-dish-card:hover {
+  border-color: var(--terracotta2);
+  background: var(--paper);
+}
+.map-dish-name {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 3px;
+}
+.map-dish-era {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-soft);
+  margin-bottom: 7px;
+}
+.map-dish-arrow {
+  margin-left: auto;
+  color: var(--ink-ghost);
+  flex-shrink: 0;
+  font-size: 18px;
+  align-self: center;
+}
+
+/* ──────────────────────────────────────
+   PANEL: ABOUT
+   ────────────────────────────────────── */
+
+.about-inner { max-width: 680px; padding: 40px 36px; }
+.about-inner h2 {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 6px;
+}
+.about-inner .sub {
+  font-family: 'Source Serif 4', serif;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--ink-mid);
+  margin-bottom: 28px;
+  line-height: 1.7;
+}
+.about-inner h3 {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 22px 0 8px;
+  letter-spacing: -0.01em;
+}
+.about-inner p {
+  font-family: 'Source Serif 4', serif;
+  font-size: 14px;
+  color: var(--ink-mid);
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+.about-pillars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+.pillar {
+  background: var(--paper-dark);
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+.pillar-num {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 22px;
+  color: var(--terracotta);
+  font-weight: 700;
+  margin-bottom: 4px;
+  letter-spacing: -0.03em;
+}
+.pillar-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.pillar-body {
+  font-family: 'Source Serif 4', serif;
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-style: italic;
+  line-height: 1.6;
+}
+.credit-block {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--radius-lg);
+  padding: 18px 22px;
+  margin-top: 28px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.8;
+  color: rgba(245,240,232,0.7);
+}
+.credit-block strong { color: var(--paper); font-style: normal; }
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 60px 32px;
+  color: var(--ink-ghost);
+}
+.empty-state p { font-family: 'Source Serif 4', serif; font-size: 14px; font-style: italic; }
+
+/* SVG folk art illustrations */
+svg.folk-art { width: 100%; height: 100%; }
+
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ════════════ MASTHEAD ════════════ -->
+  <header class="masthead">
+    <div class="masthead-left">
+      <div class="wordmark"><em>Sarap</em><span class="wordmark-exclaim">!</span></div>
+      <div class="masthead-sub">A Philippine Culinary Heritage Mapping &amp; Gastronomic Database</div>
+    </div>
+    <nav class="masthead-nav">
+      <div class="nav-item active" onclick="switchView('dish')">Dishes</div>
+      <div class="nav-item" onclick="switchView('match')">Flavor Match</div>
+      <div class="nav-item" onclick="switchView('itin')">Itineraries</div>
+      <div class="nav-item" onclick="switchView('map')">Regions</div>
+      <div class="nav-item" onclick="switchView('about')">About</div>
+    </nav>
+    <div class="masthead-status">
+      <span class="pulse"></span>
+      <span>12 dishes · 8 regions · prototype v0.1</span>
+    </div>
+  </header>
+
+  <!-- ════════════ BODY ════════════ -->
+  <div class="body-grid">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+      <div class="sb-header">
+        <div class="sb-title">Dish archive</div>
+        <div class="search-field">
+          <svg class="search-ico" width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <input type="text" id="searchQ" placeholder="Search by name or ingredient…" oninput="onSearch()">
+        </div>
+      </div>
+      <div class="region-strip">
+        <div class="region-strip-label">Filter by region</div>
+        <div class="chips" id="regionChips"></div>
+      </div>
+      <div class="dish-scroll" id="dishList"></div>
+      <div class="sb-count mono" id="dishCount"></div>
+    </aside>
+
+    <!-- ── MAIN PANEL ── -->
+    <div class="main-panel">
+      <div class="tab-bar">
+        <div class="tab active" onclick="switchTab('detail')" id="tab-detail">Heritage Record</div>
+        <div class="tab" onclick="switchTab('match')" id="tab-match">Flavor Matches</div>
+        <div class="tab" onclick="switchTab('itin')" id="tab-itin">Build Itinerary</div>
+        <div class="tab" onclick="switchTab('map')" id="tab-map">Regional Map</div>
+        <div class="tab" onclick="switchTab('about')" id="tab-about">About</div>
+      </div>
+      <div class="panel-area">
+        <div class="panel active" id="panel-detail">
+          <div class="empty-state"><p>Select a dish from the archive to begin exploring its heritage record.</p></div>
+        </div>
+        <div class="panel" id="panel-match">
+          <div class="empty-state"><p>Select a dish first to reveal its flavor matches across the archipelago.</p></div>
+        </div>
+        <div class="panel" id="panel-itin" id="panel-itinerary">
+          <!-- rendered by buildItinPanel() -->
+        </div>
+        <div class="panel" id="panel-map">
+          <!-- rendered by buildMapPanel() -->
+        </div>
+        <div class="panel" id="panel-about">
+          <!-- rendered by buildAboutPanel() -->
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /body-grid -->
+</div><!-- /app-shell -->
+
+<script>
+/* ══════════════════════════════════════
+   DATA LAYER
+   ══════════════════════════════════════ */
+
+const REGIONS = [
+  { id:'ilocos',   name:'Ilocos',   bg:'#C8D8E8', text:'#1A3050', border:'#4A7AAA' },
+  { id:'tagalog',  name:'Tagalog',  bg:'#C0DCC0', text:'#1A3818', border:'#3A7A3A' },
+  { id:'bicol',    name:'Bicol',    bg:'#F0C8B0', text:'#501810', border:'#B85030' },
+  { id:'visayas',  name:'Visayas',  bg:'#F0D890', text:'#503010', border:'#B88020' },
+  { id:'mindanao', name:'Mindanao', bg:'#C8DCA8', text:'#1A3A08', border:'#4A7A28' },
+  { id:'pampanga', name:'Pampanga', bg:'#EABCC8', text:'#401030', border:'#A84068' },
+  { id:'batangas', name:'Batangas', bg:'#C8C0E8', text:'#201040', border:'#5848A8' },
+  { id:'maranao',  name:'Maranao',  bg:'#D8D0A8', text:'#301E08', border:'#786830' },
+];
+
+const FLAVORS = {
+  sour:   { label:'Sour',    bg:'#FCEADC', text:'#7A2810' },
+  savory: { label:'Savory',  bg:'#D8EED8', text:'#0A4020' },
+  spicy:  { label:'Spicy',   bg:'#FCE0D0', text:'#6A1A08' },
+  sweet:  { label:'Sweet',   bg:'#FCF0C8', text:'#604808' },
+  umami:  { label:'Umami',   bg:'#E8E0F8', text:'#301870' },
+  rich:   { label:'Rich',    bg:'#F8E8CC', text:'#583008' },
+  smoky:  { label:'Smoky',   bg:'#E8E4D8', text:'#303020' },
+  bitter: { label:'Bitter',  bg:'#E0EEC8', text:'#284010' },
+  funky:  { label:'Funky',   bg:'#F8D8E8', text:'#5A0A30' },
+};
+
+const MONTHS_S = ['J','F','M','A','M','J','J','A','S','O','N','D'];
+const MONTHS_F = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+const DISHES = [
+  {
+    id:1, name:'Pinakbet', region:'ilocos',
+    flavors:['savory','bitter','umami'],
+    season:[1,1,0,0,0,0,0,0,0,0,0,1],
+    era:'Pre-colonial, est. 1500s',
+    prep:'Traditional clay pot (palayok); minimal water; wilting method over wood fire',
+    tagline:'The shriveled garden of the Ilocano highlands',
+    origin:'Rooted in pre-colonial vegetable cultivation along the Cordillera foothills, Pinakbet takes its name from the Ilocano word pinakebbet — "shriveled" — reflecting the cooking method of wilting bitter melon, eggplant, okra, and long beans together in fermented fish paste. Archaeological evidence from Ilocos Norte suggests similar vegetable preparations existed prior to Spanish contact. The dish is a monument to indigenous resourcefulness: every ingredient grows within walking distance of the Ilocano home.',
+    ingredients:['ampalaya (bitter melon)','talong (eggplant)','okra','sitaw (long beans)','bagoong isda (fermented fish)','kalabasa (squash)','camote tops','tomato','pork (optional)'],
+    communities:['Vigan City heritage kitchens','Laoag public market stalls','Batac family compound kitchens','La Union highland villages','Sarrat ancestral homes'],
+  },
+  {
+    id:2, name:'Kare-kare', region:'pampanga',
+    flavors:['rich','savory','umami'],
+    season:[1,1,1,0,0,0,0,0,0,1,1,1],
+    era:'Colonial period, est. 1600–1700s',
+    prep:'Long-simmered oxtail and tripe; annatto-thickened peanut broth; always served with bagoong alamang',
+    tagline:'The peanut throne of the Pampango kitchen',
+    origin:'Kare-kare\'s origins are disputed: one tradition traces it to Pampango royal kitchens, another to Moro-influenced maritime trade. The annatto-based peanut stew likely absorbed Indian or Malay curry influences through 16th-century trade, then was domesticated with oxtail, ox tripe, eggplant, and banana blossoms. Pampanga — long called the culinary capital of the Philippines — elevated it into a fiesta centrepiece. The inseparable bagoong pairing is not optional: the fermented shrimp paste is the salt and the punch.',
+    ingredients:['oxtail','ox tripe','eggplant','pechay','sitaw (long beans)','banana blossom','achuete (annatto)','ground roasted peanuts','bagoong alamang (fermented shrimp paste)'],
+    communities:['Angeles City heritage homes','San Fernando fiesta kitchens','Bacolor riverside restaurants','Guagua ancestral kitchens'],
+  },
+  {
+    id:3, name:'Bicol Express', region:'bicol',
+    flavors:['spicy','rich','savory'],
+    season:[0,0,0,0,1,1,1,1,1,0,0,0],
+    era:'Pre-colonial dish; named 1974',
+    prep:'Coconut milk reduction with labuyo chilis; palayok preferred; continuous stirring to prevent breaking',
+    tagline:'The chili testament of the coconut south',
+    origin:'The modern name was coined by restaurateur Cely Kalaw in 1974 after the Manila–Bicol train, but the dish itself — pork cooked in coconut milk with abundant labuyo bird\'s eye chilis — predates Spanish colonization. Bicolanos\' profound love of heat reflects pre-colonial trade with Malay and Indian spice merchants. What distinguishes the Bicol version from coconut pork dishes elsewhere in Southeast Asia is the uncompromising volume of chili: this is not background spice, it is the subject.',
+    ingredients:['pork belly','labuyo chili (bird\'s eye)','gata (coconut milk)','bagoong (shrimp paste)','garlic','ginger','shallots'],
+    communities:['Naga City public market stalls','Legazpi family restaurants','Daraga provincial kitchens','Sorsogon coastal home cooks'],
+  },
+  {
+    id:4, name:'Lechon Cebu', region:'visayas',
+    flavors:['savory','rich','smoky'],
+    season:[0,0,0,0,0,0,0,0,0,0,0,1],
+    era:'Colonial-indigenous adaptation, 1600s–',
+    prep:'6–8 hours on bamboo spit over coconut wood charcoal; no sauce served; skin must crack on the table',
+    tagline:'The fire-turned pig of Cebu, unsauced and unapologetic',
+    origin:'Spanish colonizers introduced roasted pig as a feast tradition, but Cebuanos transformed it: where Spanish lechon was stuffed with bread, the Cebu version is stuffed from inside with lemongrass, pandan leaves, native garlic, and spring onions — the aromatics scent the fat from within. The result needs no liver sauce. Cebu lechon gained global recognition and remains the non-negotiable centerpiece of every Cebuano fiesta, from backyard birthdays to mayoral banquets.',
+    ingredients:['whole native pig','tanglad (lemongrass)','pandan leaves','native garlic','spring onions','rock salt','black pepper'],
+    communities:['Cebu City specialist lechoneros','Carcar City heritage roasters','Talisay backyard tradition','Danao fiesta families','CNT Lechon Cebu'],
+  },
+  {
+    id:5, name:'Tinola', region:'tagalog',
+    flavors:['savory','bitter','sweet'],
+    season:[1,1,1,0,0,0,0,0,1,1,1,1],
+    era:'Pre-colonial; documented 1887',
+    prep:'Open-fire clay pot; whole knobs of ginger bruised not minced; native chicken essential',
+    tagline:'The gentle broth that Rizal turned into a metaphor',
+    origin:'José Rizal immortalised Tinola in Noli Me Tangere (1887) as a device of social humiliation — the friar gets the chicken, the guest gets only broth. This makes Tinola one of the earliest-documented Filipino dishes in literature. Chicken ginger broth with green papaya and chili leaves predates Spanish arrival by an unknowable margin, and exists in variant forms across every region of the archipelago. The Tagalog version — native chicken, young papaya, siling labuyo leaves — is the archetype.',
+    ingredients:['native chicken (manok na bisaya)','green papaya','dahon ng siling labuyo (chili leaves)','luya (ginger)','patis (fish sauce)','sibuyas (onion)','bawang (garlic)'],
+    communities:['Throughout Tagalog provinces','Laguna riverside communities','Palawan coastal villages','Quezon heritage kitchens','Rizal provincial homes'],
+  },
+  {
+    id:6, name:'Adobo sa Gata', region:'bicol',
+    flavors:['sour','rich','savory'],
+    season:[1,1,0,0,1,1,1,0,0,0,1,1],
+    era:'Colonial-indigenous fusion, est. 1700s',
+    prep:'Long vinegar braise until almost dry; coconut milk added in final minutes; not reduced to a glaze',
+    tagline:'Where the souring agent meets the coconut grove',
+    origin:'The Bicolano variant of the pan-Philippine adobo tradition, elevated by a final wash of coconut milk. Where most adobo traditions reduce toward a vinegar-soy glaze that coats the meat, Bicol\'s version opens the sauce back up with gata in the closing minutes — reflecting the region\'s abundant coconut economy and its preference for creamy heat. The technique produces something simultaneously sour, rich, and savory in a ratio no other adobo tradition achieves. The Bicol version rarely uses the word "adobo" at home; it is simply "pork with gata."',
+    ingredients:['liempo (pork belly)','gata (coconut milk)','suka (native vinegar)','toyo (soy sauce)','laurel (bay leaf)','pamintang buo (whole black pepper)','bawang (garlic)','labuyo chili'],
+    communities:['Naga City home kitchens','Camarines Sur interior river towns','Albay mountain communities','Masbate island kitchens'],
+  },
+  {
+    id:7, name:'Sinigang na Baboy', region:'tagalog',
+    flavors:['sour','savory','bitter'],
+    season:[1,1,0,0,0,0,0,0,0,0,1,1],
+    era:'Pre-colonial; documented 1613',
+    prep:'Fresh sampaloc broth; pot uncovered to preserve bright sourness; kangkong added last minute',
+    tagline:'The souring of the archipelago\'s table',
+    origin:'Sinigang\'s tamarind-souring technique predates colonialism and appears across Southeast Asia in related forms. Spanish priest Pedro de San Buenaventura documented it in 1613. The Tagalog version — pork ribs, tamarind, kangkong water spinach, radish, eggplant — became the paradigm dish and has been called the unofficial national dish of the Philippines. Every region has its own souring agent: Ilokanos use unripe batuan fruit, Bicolanos use santol, Visayans use kamias. The dish is a window into the ecology of every region.',
+    ingredients:['baboy (pork ribs)','sampaloc (fresh tamarind)','kangkong (water spinach)','labanos (radish)','talong (eggplant)','sitaw (long beans)','kamatis (tomato)','sibuyas (onion)'],
+    communities:['Metro Manila households','Laguna public market restaurants','Batangas riverside towns','Cavite fishing communities','Bulacan home kitchens'],
+  },
+  {
+    id:8, name:'Kinilaw na Tanigue', region:'visayas',
+    flavors:['sour','spicy','savory'],
+    season:[0,0,1,1,1,1,1,0,0,0,0,0],
+    era:'Pre-colonial, est. 900–1200 CE',
+    prep:'Raw acid-cure in sukang tuba only; fish sliced thick; eaten within one hour of preparation; no heat',
+    tagline:'The oldest dish in the archipelago, undisguised',
+    origin:'Likely the oldest documented Philippine dish — a pre-colonial sea ceviche using coconut or cane vinegar to denature raw fish proteins. Its precursors appear connected to 10th-century Laguna Copperplate-era coastal trade culture. The Visayan version uses tanigue (Spanish mackerel), the most prized kinilaw fish, with native coconut vinegar (sukang tuba), fresh ginger, red onion, and bird\'s eye chili. Each fishing village has its own proportion gospel — the ratio of vinegar to calamansi is a matter of deep local pride and occasional argument.',
+    ingredients:['tanigue (Spanish mackerel)','sukang tuba (coconut vinegar)','luya (ginger)','pulang sibuyas (red onion)','labuyo chili','calamansi juice','asin (salt)'],
+    communities:['Iloilo fishing villages','Bacolod coastal stalls','Cebu heritage kitchens','Bohol seaside restaurants','Samar island seafood markets'],
+  },
+  {
+    id:9, name:'Palapa', region:'maranao',
+    flavors:['spicy','savory','funky'],
+    season:[1,1,1,1,1,1,1,1,1,1,1,1],
+    era:'Pre-Islamic, est. 1000+ CE',
+    prep:'Mortar-ground; slow-toasted in wok (no hurrying); sakurab cannot be substituted; made in large batches and stored',
+    tagline:'The irreplaceable condiment of Lake Lanao',
+    origin:'The sacred flavour base of the Maranao people of Lanao del Sur — made from sakurab (a native scallion that grows only around Lake Lanao), ginger, turmeric, and toasted coconut. Palapa appears in no other Philippine culinary tradition; it is the flavour signature that makes Maranao cuisine immediately identifiable. The Maranao hold that sakurab cannot be replaced: bulb onion, regular scallion, and chives each fail in different ways. This makes palapa — and by extension, any authentic Maranao dish — geographically bound to Lanao.',
+    ingredients:['sakurab (Lanao native scallion)','luya (ginger)','dilaw (turmeric)','niyog na inihaw (toasted coconut)','labuyo chili','asin (salt)'],
+    communities:['Marawi City kitchen elders','Lanao del Sur lake communities','Iligan transition kitchens','Cagayan de Oro Maranao diaspora'],
+  },
+  {
+    id:10, name:'Batangas Lomi', region:'batangas',
+    flavors:['rich','savory','umami'],
+    season:[1,0,0,0,0,0,0,0,0,0,0,1],
+    era:'Chinese trade adaptation, est. 1700s',
+    prep:'Continuous stirring at high heat; cornstarch added last; broth must coat the back of a spoon; served scalding',
+    tagline:'The thicker, heavier son of Chinese lomi',
+    origin:'Lomi noodle soup arrived in Batangas harbor towns with Hokkien-Chinese traders in the 18th century and was immediately remade in the local image. The Batangas version is distinguished above all by its broth: thick, viscous, and starchy — far beyond any Chinese or Manila variant. The cornstarch thickening is a Batangas invention that reflects a local aesthetic for substantial, coating meals. The lomi house — a dedicated restaurant category found only in Batangas — opens at 4 a.m. for drivers and market workers.',
+    ingredients:['lomi noodles (thick egg)','pork liver','isaw (pig intestines)','kikiam','squid balls','itlog (egg)','cornstarch','patis (fish sauce)'],
+    communities:['Lipa City lomi houses','Batangas City predawn stalls','Santo Tomas lomi district','Tanauan early-morning eateries'],
+  },
+  {
+    id:11, name:'Batchoy', region:'visayas',
+    flavors:['rich','umami','savory'],
+    season:[1,0,0,0,0,0,0,0,0,0,0,1],
+    era:'1930s, Chinese-Ilonggo fusion',
+    prep:'Open-flame market cauldron; broth made from pork organs and shrimp heads; assembled to order; toppings piled high',
+    tagline:'La Paz market\'s accidental masterpiece, protected by law',
+    origin:'La Paz Batchoy was born in Iloilo City\'s La Paz public market in the 1930s, traced to Chinese-Filipino ted-fuy noodle vendors who adapted their recipes to local tastes. The dish — noodles in a deep pork-and-shrimp broth topped with chicharon, fried garlic, and raw egg — became so identified with its origin that it earned intellectual property protection from the Philippine IPOPHL. The stall format is inseparable from the dish: high heat, rapid assembly, immediate service.',
+    ingredients:['bihon noodles','pork organs (liver, kidney)','shrimp heads (for broth)','itlog (egg)','chicharon (pork crackling)','sinangag na bawang (fried garlic)','patis (fish sauce)','beef'],
+    communities:['La Paz district Iloilo (origin stalls)','Molo Iloilo adaptations','Bacolod batchoy houses','SM Iloilo food court heritage stalls'],
+  },
+  {
+    id:12, name:'Inasal', region:'visayas',
+    flavors:['smoky','savory','sweet'],
+    season:[0,0,0,1,1,1,1,1,1,0,0,0],
+    era:'Pre-colonial grilling; formalized 1940s',
+    prep:'Bamboo skewer; coconut charcoal; constant annatto-oil basting throughout cooking; served with garlic rice',
+    tagline:'Bacolod\'s annatto-orange ritual of the open fire',
+    origin:'Bacolod\'s defining dish — chicken marinated in sukang iloco (Ilocos cane vinegar), calamansi juice, ginger, lemongrass, and atsuete (annatto), then grilled over coconut charcoal while being continuously basted with annatto oil. The word inasal means "grilled meat" in Hiligaynon. What separates it from all other Philippine grilled chicken is the basting ritual: the annatto oil darkens the skin to a deep orange-red while the interior stays moist, creating a colour and flavour combination that is genuinely unreplicable outside Negros Occidental.',
+    ingredients:['native chicken','sukang iloco (Ilocos cane vinegar)','calamansi juice','tanglad (lemongrass)','luya (ginger)','atsuete (annatto)','rock salt','native garlic'],
+    communities:['Bacolod Manokan Country stalls','Negros Occidental provincial towns','Iloilo adaptation restaurants','Bacolod City street grills'],
+  },
+];
+
+/* ══════════════════════════════════════
+   STATE
+   ══════════════════════════════════════ */
+let activeDish = null;
+let activeRegions = new Set();
+let searchQ = '';
+let activeTab = 'detail';
+let selectedMapRegion = null;
+
+/* ══════════════════════════════════════
+   HELPERS
+   ══════════════════════════════════════ */
+const R = id => REGIONS.find(r => r.id === id);
+const F = id => FLAVORS[id];
+
+function fMicro(f) {
+  const fl = F(f);
+  return `<span class="f-micro" style="background:${fl.bg};color:${fl.text}">${fl.label}</span>`;
+}
+function fChip(f) {
+  const fl = F(f);
+  return `<span class="f-chip" style="background:${fl.bg};color:${fl.text}">${fl.label}</span>`;
+}
+function rDot(rid) {
+  const r = R(rid);
+  return `<span class="rdot" style="background:${r.border}"></span>`;
+}
+function regionBadge(rid) {
+  const r = R(rid);
+  return `<span class="region-badge" style="background:${r.bg};color:${r.text}">${rDot(rid)}&nbsp;${r.name}</span>`;
+}
+
+/* ══════════════════════════════════════
+   FOLK ART SVG — per-dish motifs
+   ══════════════════════════════════════ */
+function dishSVG(dish) {
+  // Flat, warm, motif-style illustration reminiscent of Eva Yu's work in Sarap
+  const motifs = {
+    1: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="folk-art">
+      <rect width="200" height="200" fill="#EDE6D6"/>
+      <!-- clay pot -->
+      <ellipse cx="100" cy="145" rx="52" ry="12" fill="#B85030" opacity="0.3"/>
+      <path d="M60 120 Q58 145 65 158 Q80 170 100 172 Q120 170 135 158 Q142 145 140 120 Q130 108 100 106 Q70 108 60 120Z" fill="#C87848"/>
+      <path d="M60 120 Q70 108 100 106 Q130 108 140 120 Q130 112 100 110 Q70 112 60 120Z" fill="#B85030"/>
+      <!-- rim -->
+      <ellipse cx="100" cy="120" rx="40" ry="9" fill="#D4682A"/>
+      <ellipse cx="100" cy="117" rx="40" ry="7" fill="#E0845A" opacity="0.5"/>
+      <!-- vegetables peeking out -->
+      <ellipse cx="88" cy="113" rx="12" ry="8" fill="#3A6A38" opacity="0.9"/>
+      <ellipse cx="112" cy="112" rx="9" ry="7" fill="#8A3030" opacity="0.9"/>
+      <ellipse cx="100" cy="111" rx="8" ry="6" fill="#5A8A28" opacity="0.8"/>
+      <!-- bitter melon bumps -->
+      <circle cx="82" cy="111" r="2.5" fill="#2A5020"/>
+      <circle cx="87" cy="108" r="2" fill="#2A5020"/>
+      <circle cx="93" cy="109" r="2.5" fill="#2A5020"/>
+      <!-- decorative border motif -->
+      <rect x="20" y="20" width="160" height="160" rx="8" fill="none" stroke="#B85030" stroke-width="2" opacity="0.3"/>
+      <rect x="28" y="28" width="144" height="144" rx="6" fill="none" stroke="#C87848" stroke-width="0.8" opacity="0.4" stroke-dasharray="4 4"/>
+      <!-- corner flowers -->
+      <circle cx="36" cy="36" r="5" fill="#C8901A" opacity="0.6"/>
+      <circle cx="164" cy="36" r="5" fill="#C8901A" opacity="0.6"/>
+      <circle cx="36" cy="164" r="5" fill="#C8901A" opacity="0.6"/>
+      <circle cx="164" cy="164" r="5" fill="#C8901A" opacity="0.6"/>
+      <!-- label -->
+      <text x="100" y="188" font-family="'DM Mono',monospace" font-size="8" fill="#8A7558" text-anchor="middle" letter-spacing="2">ILOCOS</text>
+    </svg>`,
+    2: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="folk-art">
+      <rect width="200" height="200" fill="#EDE6D6"/>
+      <!-- bowl -->
+      <ellipse cx="100" cy="148" rx="62" ry="14" fill="#B85030" opacity="0.25"/>
+      <path d="M42 120 Q40 148 52 162 Q70 178 100 180 Q130 178 148 162 Q160 148 158 120Z" fill="#D4682A" opacity="0.8"/>
+      <path d="M42 120 Q52 108 100 106 Q148 108 158 120 Q148 112 100 110 Q52 112 42 120Z" fill="#B85030"/>
+      <!-- peanut sauce -->
+      <ellipse cx="100" cy="120" rx="52" ry="12" fill="#C8901A" opacity="0.7"/>
+      <ellipse cx="100" cy="118" rx="50" ry="10" fill="#D4A030" opacity="0.6"/>
+      <!-- oxtail silhouette -->
+      <path d="M75 118 Q80 100 90 95 Q100 90 110 95 Q120 100 125 118" fill="none" stroke="#6A3018" stroke-width="5" stroke-linecap="round"/>
+      <!-- achuete seeds decorative -->
+      <circle cx="85" cy="115" r="3" fill="#B85030" opacity="0.7"/>
+      <circle cx="115" cy="113" r="3" fill="#B85030" opacity="0.7"/>
+      <circle cx="100" cy="112" r="2.5" fill="#B85030" opacity="0.6"/>
+      <!-- border -->
+      <rect x="20" y="20" width="160" height="160" rx="8" fill="none" stroke="#B85030" stroke-width="2" opacity="0.3"/>
+      <rect x="28" y="28" width="144" height="144" rx="6" fill="none" stroke="#C87848" stroke-width="0.8" opacity="0.4" stroke-dasharray="4 4"/>
+      <circle cx="36" cy="36" r="5" fill="#C8901A" opacity="0.6"/>
+      <circle cx="164" cy="36" r="5" fill="#C8901A" opacity="0.6"/>
+      <circle cx="36" cy="164" r="5" fill="#C8901A" opacity="0.6"/>
+      <circle cx="164" cy="164" r="5" fill="#C8901A" opacity="0.6"/>
+      <text x="100" y="188" font-family="'DM Mono',monospace" font-size="8" fill="#8A7558" text-anchor="middle" letter-spacing="2">PAMPANGA</text>
+    </svg>`,
+    default: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="folk-art">
+      <rect width="200" height="200" fill="#EDE6D6"/>
+      <!-- generic bowl motif -->
+      <ellipse cx="100" cy="145" rx="55" ry="12" fill="#B85030" opacity="0.2"/>
+      <path d="M48 118 Q46 145 58 160 Q74 175 100 177 Q126 175 142 160 Q154 145 152 118Z" fill="#C87848" opacity="0.7"/>
+      <path d="M48 118 Q60 106 100 104 Q140 106 152 118 Q140 110 100 108 Q60 110 48 118Z" fill="#B85030"/>
+      <!-- steam lines -->
+      <path d="M80 100 Q78 92 82 84 Q86 76 84 68" fill="none" stroke="#8A7558" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+      <path d="M100 96 Q98 87 102 79 Q106 71 104 62" fill="none" stroke="#8A7558" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+      <path d="M120 100 Q118 92 122 84 Q126 76 124 68" fill="none" stroke="#8A7558" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+      <!-- border -->
+      <rect x="20" y="20" width="160" height="160" rx="8" fill="none" stroke="#B85030" stroke-width="2" opacity="0.3"/>
+      <rect x="28" y="28" width="144" height="144" rx="6" fill="none" stroke="#C87848" stroke-width="0.8" opacity="0.4" stroke-dasharray="4 4"/>
+      <circle cx="36" cy="36" r="5" fill="#C8901A" opacity="0.6"/>
+      <circle cx="164" cy="36" r="5" fill="#C8901A" opacity="0.6"/>
+      <circle cx="36" cy="164" r="5" fill="#C8901A" opacity="0.6"/>
+      <circle cx="164" cy="164" r="5" fill="#C8901A" opacity="0.6"/>
+    </svg>`
+  };
+  return motifs[dish.id] || motifs.default;
+}
+
+/* ══════════════════════════════════════
+   INIT
+   ══════════════════════════════════════ */
+function init() {
+  buildRegionChips();
+  renderDishList();
+  buildItinPanel();
+  buildMapPanel();
+  buildAboutPanel();
+}
+
+function buildRegionChips() {
+  const el = document.getElementById('regionChips');
+  REGIONS.forEach(r => {
+    const c = document.createElement('button');
+    c.className = 'chip';
+    c.textContent = r.name;
+    c.setAttribute('data-rid', r.id);
+    c.onclick = () => toggleRegion(r.id, c, r);
+    el.appendChild(c);
+  });
+}
+
+function toggleRegion(rid, el, r) {
+  if (activeRegions.has(rid)) {
+    activeRegions.delete(rid);
+    el.classList.remove('on');
+    el.style.background = '';
+    el.style.color = '';
+    el.style.borderColor = 'transparent';
+  } else {
+    activeRegions.add(rid);
+    el.classList.add('on');
+    el.style.background = r.border;
+    el.style.color = '#FAF5EC';
+    el.style.borderColor = r.border;
+  }
+  renderDishList();
+}
+
+function onSearch() {
+  searchQ = document.getElementById('searchQ').value.toLowerCase();
+  renderDishList();
+}
+
+function getFiltered() {
+  return DISHES.filter(d => {
+    if (activeRegions.size > 0 && !activeRegions.has(d.region)) return false;
+    if (searchQ) {
+      const hay = (d.name + ' ' + d.region + ' ' + d.ingredients.join(' ')).toLowerCase();
+      if (!hay.includes(searchQ)) return false;
+    }
+    return true;
+  });
+}
+
+function renderDishList() {
+  const list = document.getElementById('dishList');
+  const filtered = getFiltered();
+  document.getElementById('dishCount').textContent = `${filtered.length} of ${DISHES.length} dishes`;
+
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty-state" style="padding:24px"><p>No dishes match the current filters.</p></div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(d => {
+    const r = R(d.region);
+    const sel = activeDish?.id === d.id;
+    return `<div class="dish-entry${sel ? ' active' : ''}" onclick="selectDish(${d.id})">
+      <div class="de-name">${d.name}</div>
+      <div class="de-region">${rDot(d.region)}${r.name}</div>
+      <div class="de-flavors">${d.flavors.map(fMicro).join('')}</div>
+    </div>`;
+  }).join('');
+}
+
+function selectDish(id) {
+  activeDish = DISHES.find(d => d.id === id);
+  renderDishList();
+  renderDetailPanel(activeDish);
+  renderMatchPanel(activeDish);
+}
+
+/* ══════════════════════════════════════
+   RENDER: DETAIL PANEL
+   ══════════════════════════════════════ */
+function renderDetailPanel(d) {
+  const r = R(d.region);
+  const segs = d.season.map((on, i) =>
+    `<div class="s-bar" title="${MONTHS_F[i]}" style="background:${on ? r.border : 'var(--paper-deep)'}"></div>`
+  ).join('');
+  const lbls = MONTHS_S.map(m => `<div class="s-lbl">${m}</div>`).join('');
+
+  document.getElementById('panel-detail').innerHTML = `
+    <div class="dish-hero">
+      <div>
+        <div class="hero-eyebrow">
+          ${regionBadge(d.region)}
+          <span class="era-tag mono">${d.era}</span>
+        </div>
+        <h1 class="dish-title">${d.name}</h1>
+        <p class="dish-tagline">"${d.tagline}"</p>
+        <div class="flavor-chips">${d.flavors.map(fChip).join('')}</div>
+      </div>
+      <div class="dish-art">${dishSVG(d)}</div>
+    </div>
+
+    <div class="hero-meta-row">
+      <div class="hm-cell">
+        <div class="hm-label">Preparation method</div>
+        <div class="hm-val">${d.prep}</div>
+      </div>
+      <div class="hm-cell">
+        <div class="hm-label">Seasonal peak</div>
+        <div class="hm-val">
+          <div class="season-visual">${segs}</div>
+          <div class="s-labels">${lbls}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-body">
+      <div class="section">
+        <div class="sec-head">Historical origin &amp; cultural context</div>
+        <div class="origin-pull">${d.origin}</div>
+      </div>
+
+      <div class="section" style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+        <div>
+          <div class="sec-head">Indigenous ingredients</div>
+          <div class="ingredients-grid">${d.ingredients.map(i => `<span class="ing-tag">${i}</span>`).join('')}</div>
+        </div>
+        <div>
+          <div class="sec-head">Communities (traditional preparation)</div>
+          <div class="community-rows">${d.communities.map(c => `<div class="comm-row"><span class="comm-bullet"></span>${c}</div>`).join('')}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ══════════════════════════════════════
+   RENDER: MATCH PANEL
+   ══════════════════════════════════════ */
+function flavorSim(a, b) {
+  const shared = a.flavors.filter(f => b.flavors.includes(f));
+  const ingShared = a.ingredients.filter(i => b.ingredients.includes(i));
+  const crossRegion = a.region !== b.region ? 6 : 0;
+  const score = Math.min(97, Math.round(shared.length * 28 + ingShared.length * 10 + crossRegion));
+  return { score, shared, ingShared };
+}
+
+function renderMatchPanel(d) {
+  const r = R(d.region);
+  const scored = DISHES.filter(x => x.id !== d.id)
+    .map(x => { const s = flavorSim(d, x); return { ...x, ...s }; })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 6);
+
+  const topMatch = scored[0]?.score ?? 0;
+  const strongCount = scored.filter(s => s.score >= 50).length;
+  const regionCount = new Set(scored.map(s => s.region)).size;
+  const topShared = scored[0]?.shared?.length ?? 0;
+
+  document.getElementById('panel-match').innerHTML = `
+    <div class="match-panel-inner">
+      <div class="match-header">
+        <h2 class="match-title">Flavor matches for <em>${d.name}</em></h2>
+        <p class="match-desc">Dishes across the archipelago that share flavor DNA with ${d.name} (${r.name}). Matching is calculated from shared flavor profiles, overlapping indigenous ingredients, and a cross-region discovery bonus. Use these connections to build an itinerary around taste rather than postcard geography.</p>
+      </div>
+
+      <div class="stats-strip">
+        <div class="stat-tile">
+          <div class="stat-n">${topMatch}%</div>
+          <div class="stat-l">Top match score</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-n">${strongCount}</div>
+          <div class="stat-l">Strong matches ≥50%</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-n">${regionCount}</div>
+          <div class="stat-l">Regions in results</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-n">${topShared}</div>
+          <div class="stat-l">Shared notes (top)</div>
+        </div>
+      </div>
+
+      <div class="match-grid">
+        ${scored.map(m => {
+          const mr = R(m.region);
+          return `<div class="match-card" onclick="selectDish(${m.id})">
+            <div class="match-score-col">
+              <div class="match-score">${m.score}</div>
+              <div class="match-score-pct">% match</div>
+            </div>
+            <div class="match-divider"></div>
+            <div class="match-info">
+              <div class="match-dish-name">${m.name}</div>
+              <div class="match-region-row">${rDot(m.region)}${mr.name}</div>
+              ${m.shared.length ? `<div class="match-shared-pills">${m.shared.map(f=>`<span class="shared-pill">${F(f).label}</span>`).join('')}</div>` : ''}
+              ${m.ingShared.length ? `<div class="match-note">Shares: ${m.ingShared.slice(0,3).join(', ')}${m.ingShared.length>3?'…':''}</div>` : ''}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+/* ══════════════════════════════════════
+   BUILD: ITINERARY PANEL (static shell)
+   ══════════════════════════════════════ */
+const ITIN_ROUTES = {
+  sour:   { name:'Sour & Fermented Trail',   theme:'vinegar, tamarind, fermented pastes',   ids:[7,8,6,1,3,5,7] },
+  rich:   { name:'Rich & Savory Circuit',    theme:'peanut, coconut, pork fat, bone broth', ids:[2,10,11,4,12,9,2] },
+  spicy:  { name:'Spice Road',               theme:'labuyo, turmeric, ginger, chili',        ids:[3,9,8,12,6,1,3] },
+  sweet:  { name:'Gentle & Sweet Route',     theme:'coconut, annatto, mild aromatics',       ids:[5,12,4,11,10,2,5] },
+  umami:  { name:'Umami Pilgrimage',         theme:'bagoong, patis, pork bone, shrimp',     ids:[2,7,10,11,1,9,2] },
+};
+
+const STOP_TIMES  = ['6:30 AM','9:00 AM','12:30 PM','3:30 PM','7:30 PM'];
+const STOP_ACTS = [
+  { title:'Dawn market visit', sub:'Source ingredients with a local cook at the palenke' },
+  { title:'Heritage kitchen visit', sub:'Observe traditional preparation in a community kitchen' },
+  { title:'Lunch', sub:null },
+  { title:'Ingredient provenance tour', sub:'Trace key ingredients to farm, sea, or forest source' },
+  { title:'Communal dinner', sub:'Evening meal hosted by a local community family' },
+];
+
+function buildItinPanel() {
+  const regOpts = REGIONS.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+  document.getElementById('panel-itin').innerHTML = `
+    <div class="itin-panel-inner">
+      <div class="itin-control-bar">
+        <div class="ctrl-group">
+          <span class="ctrl-label">Starting region</span>
+          <select class="ctrl-select" id="itin-region"><option value="">Any region</option>${regOpts}</select>
+        </div>
+        <div class="ctrl-group">
+          <span class="ctrl-label">Duration</span>
+          <select class="ctrl-select" id="itin-days">
+            <option value="5">5 days</option>
+            <option value="7">7 days</option>
+            <option value="10">10 days</option>
+          </select>
+        </div>
+        <div class="ctrl-group">
+          <span class="ctrl-label">Flavor focus</span>
+          <select class="ctrl-select" id="itin-focus">
+            <option value="sour">Sour &amp; fermented</option>
+            <option value="rich">Rich &amp; savory</option>
+            <option value="spicy">Spicy &amp; aromatic</option>
+            <option value="sweet">Sweet &amp; mild</option>
+            <option value="umami">Umami forward</option>
+          </select>
+        </div>
+        <button class="gen-btn" onclick="generateItinerary()">Generate itinerary →</button>
+      </div>
+      <div id="itin-output"><div class="empty-state"><p>Configure your gastronomic itinerary above and click Generate.</p></div></div>
+    </div>
+  `;
+}
+
+function generateItinerary() {
+  const days = parseInt(document.getElementById('itin-days').value);
+  const focus = document.getElementById('itin-focus').value;
+  const route = ITIN_ROUTES[focus];
+  const ids = [...route.ids];
+  while (ids.length < days) ids.push(...route.ids);
+  const selected = ids.slice(0, days).map(id => DISHES.find(d => d.id === id));
+
+  const banner = `<div class="route-banner">
+    <div>
+      <div class="route-name">${route.name}</div>
+      <div class="route-meta mono">${days} days · Flavor thread: ${route.theme}</div>
+    </div>
+    <div class="route-flavor-tag">${focus.toUpperCase()}</div>
+  </div>`;
+
+  const cards = selected.map((d, i) => {
+    const r = R(d.region);
+    return `<div class="day-card">
+      <div class="day-card-head">
+        <span class="day-num">${i+1}</span>
+        <div>
+          <div class="day-card-title">${d.name}</div>
+          <div class="day-card-loc">${rDot(d.region)}${r.name} · ${d.communities[0]}</div>
+        </div>
+        <div class="day-card-flavors">${d.flavors.map(fMicro).join('')}</div>
+      </div>
+      <div class="stop-list">
+        ${STOP_TIMES.map((t, j) => {
+          const act = STOP_ACTS[j];
+          return `<div class="stop-row">
+            <div class="stop-time">${t}</div>
+            <div class="stop-body">
+              <div class="stop-title">${j === 2 ? d.name : act.title}</div>
+              <div class="stop-sub">${j === 2 ? d.communities[0] : act.sub}</div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('itin-output').innerHTML = banner + `<div class="day-cards">${cards}</div>`;
+}
+
+/* ══════════════════════════════════════
+   BUILD: MAP PANEL
+   ══════════════════════════════════════ */
+function buildMapPanel() {
+  const tiles = REGIONS.map(r => {
+    const ds = DISHES.filter(d => d.region === r.id);
+    const flavs = [...new Set(ds.flatMap(d => d.flavors))].slice(0,3);
+    return `<div class="r-tile" id="rtile-${r.id}"
+      style="background:${r.bg};color:${r.text}"
+      onclick="selectMapRegion('${r.id}')">
+      <div class="r-tile-name">${r.name}</div>
+      <div class="r-tile-count mono">${ds.length} dish${ds.length!==1?'es':''}</div>
+      <div class="r-tile-flavors">${flavs.map(f=>`<span class="r-tile-f" style="color:${r.text}">${F(f).label}</span>`).join('')}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('panel-map').innerHTML = `
+    <div class="map-panel-inner">
+      <div class="map-intro">
+        <h2>Culinary regions of the Philippines</h2>
+        <p>Select a region to explore its dishes and dominant flavor traditions. Each region is a distinct culinary ecosystem.</p>
+      </div>
+      <div class="region-mosaic">${tiles}</div>
+      <div id="map-region-section"></div>
+    </div>
+  `;
+}
+
+function selectMapRegion(rid) {
+  if (selectedMapRegion === rid) {
+    selectedMapRegion = null;
+    document.querySelectorAll('.r-tile').forEach(t => t.classList.remove('sel'));
+    document.getElementById('map-region-section').innerHTML = '';
+    return;
+  }
+  selectedMapRegion = rid;
+  document.querySelectorAll('.r-tile').forEach(t => t.classList.remove('sel'));
+  document.getElementById('rtile-' + rid).classList.add('sel');
+
+  const r = R(rid);
+  const ds = DISHES.filter(d => d.region === rid);
+
+  const cards = ds.map(d => `<div class="map-dish-card" onclick="selectDish(${d.id});switchTab('detail')">
+    <div style="flex:1">
+      <div class="map-dish-name">${d.name}</div>
+      <div class="map-dish-era mono">${d.era}</div>
+      <div class="de-flavors">${d.flavors.map(fMicro).join('')}</div>
+    </div>
+    <span class="map-dish-arrow">›</span>
+  </div>`).join('');
+
+  document.getElementById('map-region-section').innerHTML = `
+    <div class="sec-head" style="margin-bottom:14px">${r.name} — ${ds.length} dishes in the archive</div>
+    <div class="map-dish-grid">${cards}</div>
+  `;
+}
+
+/* ══════════════════════════════════════
+   BUILD: ABOUT PANEL
+   ══════════════════════════════════════ */
+function buildAboutPanel() {
+  document.getElementById('panel-about').innerHTML = `
+    <div class="about-inner">
+      <h2>About Sarap!</h2>
+      <p class="sub">A Philippine Culinary Heritage Mapping &amp; Gastronomic Database — and the infrastructure layer that gastronomic tourism in the Philippines currently lacks.</p>
+
+      <p>A comprehensive culinary heritage database — mapping regional dishes, their historical origins, their indigenous ingredient dependencies, their seasonal availability, and the specific communities where they are still prepared in traditional forms — would be the foundation of a gastronomic tourism infrastructure that currently does not exist for the Philippines.</p>
+
+      <p>Overlaid with traveler preference data and food tourism behavior patterns, this database becomes a matching engine: connecting the food traveler who loved a specific flavor profile in one Philippine region to the three other regions where related but distinct culinary traditions exist, building itineraries around culinary geography rather than postcard geography.</p>
+
+      <div class="about-pillars">
+        <div class="pillar">
+          <div class="pillar-num">01</div>
+          <div class="pillar-title">Heritage Mapping</div>
+          <div class="pillar-body">Every dish traced to its pre-colonial, colonial, or trade-fusion origin. Not just where it is eaten, but where it was invented and why.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">02</div>
+          <div class="pillar-title">Ingredient Ecology</div>
+          <div class="pillar-body">Each recipe tracked to its indigenous ingredient dependencies — which crops, fish, ferments, and aromatics make a dish geographically bound.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">03</div>
+          <div class="pillar-title">Living Communities</div>
+          <div class="pillar-body">The specific households, market stalls, and kitchens where traditional preparation is still practised — not restaurants, but roots.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">04</div>
+          <div class="pillar-title">Flavor Matching Engine</div>
+          <div class="pillar-body">A recommendation layer that builds itineraries around flavor DNA — connecting a traveler's taste profile to the regions that can satisfy it.</div>
+        </div>
+      </div>
+
+      <h3>Design reference</h3>
+      <p>The visual language of this product draws from Exploding Galaxies' 2025 reissues of <em>Sarap: Essays on Philippine Food</em> and <em>Palayok: Philippine Food Through Time, On Site, In the Pot</em> by Doreen G. Fernandez and Edilberto N. Alegre — books that demonstrated what it means to treat Filipino food culture as serious literary and cultural subject matter. The editorial serif typography, cream paper ground, flat folk illustration sensibility, and earthy warm palette are inherited from that tradition.</p>
+
+      <h3>Data scope (prototype)</h3>
+      <p>This prototype contains 12 dishes across 8 regions. A production system would require systematic ethnographic fieldwork, community consent frameworks, and continuous archival updating as traditional preparations evolve, migrate, or are lost. The database is a living document, not a catalogue.</p>
+
+      <div class="credit-block">
+        <strong>"Join the voyage: we want readers who cook, who like to eat, who enjoy reading about cooking and eating, who are curious about the subtext beneath our food."</strong><br>
+        — Doreen G. Fernandez &amp; Edilberto N. Alegre, <em>Sarap</em> (1988, reissued 2025 by Exploding Galaxies)
+      </div>
+    </div>
+  `;
+}
+
+/* ══════════════════════════════════════
+   NAVIGATION
+   ══════════════════════════════════════ */
+const TABS = ['detail','match','itin','map','about'];
+const VIEW_MAP = { dish:'detail', match:'match', itin:'itin', map:'map', about:'about' };
+
+function switchTab(name) {
+  TABS.forEach(t => {
+    document.getElementById('panel-'+t).classList.toggle('active', t===name);
+    document.getElementById('tab-'+t).classList.toggle('active', t===name);
+  });
+  activeTab = name;
+}
+
+function switchView(view) {
+  const tab = VIEW_MAP[view];
+  switchTab(tab);
+  const navItems = document.querySelectorAll('.nav-item');
+  const views = ['dish','match','itin','map','about'];
+  navItems.forEach((ni, i) => ni.classList.toggle('active', views[i] === view));
+}
+
+/* ══════════════════════════════════════
+   BOOT
+   ══════════════════════════════════════ */
+init();
+selectDish(7); // Open with Sinigang as default
+</script>
+</body>
+</html>
